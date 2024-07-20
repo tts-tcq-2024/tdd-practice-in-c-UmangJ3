@@ -1,8 +1,21 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
+int is_empty(const char* numbers) {
+    return numbers == NULL || strlen(numbers) == 0;
+}
+
+int convert_and_sum(const char* token) {
+    int num = atoi(token);
+    if (num <= 1000) {
+        return num;
+    }
+    return 0;
+}
+
 int add(const char* numbers) {
-    if (numbers == NULL || strlen(numbers) == 0) {
+    if (is_empty(numbers)) {
         return 0;
     }
 
@@ -12,15 +25,10 @@ int add(const char* numbers) {
     char* token = strtok(numbersCopy, delimiter);
 
     while (token != NULL) {
-        int num = atoi(token);
-        if (num <= 1000) {
-            sum += num;
-        }
+        sum += convert_and_sum(token);
         token = strtok(NULL, delimiter);
     }
 
     free(numbersCopy);
     return sum;
 }
-
-
