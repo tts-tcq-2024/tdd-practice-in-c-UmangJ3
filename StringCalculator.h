@@ -50,16 +50,29 @@ char* create_delimiter(const char* delimiter_start, size_t len) {
     return delimiter;
 }
 
+const char* find_delimiter_start(const char* numbers) {
+    return numbers + 2; // Skip the "//" part
+}
+
+const char* find_delimiter_end(const char* delimiter_start) {
+    return strchr(delimiter_start, '\n');
+}
+
+char* process_custom_delimiter(const char* delimiter_start, size_t len) {
+    if (delimiter_start[0] == '[' && delimiter_start[len-1] == ']') {
+        delimiter_start++;
+        len -= 2;
+    }
+    return create_delimiter(delimiter_start, len);
+}
+
 char* extract_custom_delimiter(const char* numbers) {
-    const char* delimiter_start = numbers + 2;
-    const char* delimiter_end = strchr(delimiter_start, '\n');
+    const char* delimiter_start = find_delimiter_start(numbers);
+    const char* delimiter_end = find_delimiter_end(delimiter_start);
+    
     if (delimiter_end) {
         size_t len = delimiter_end - delimiter_start;
-        if (delimiter_start[0] == '[' && delimiter_start[len-1] == ']') {
-            delimiter_start++;
-            len -= 2;
-        }
-        return create_delimiter(delimiter_start, len);
+        return process_custom_delimiter(delimiter_start, len);
     }
     return NULL;
 }
