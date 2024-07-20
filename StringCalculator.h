@@ -50,7 +50,7 @@ char* create_delimiter(const char* delimiter_start, size_t len) {
     return delimiter;
 }
 
-char* extract_delimiter(const char* numbers) {
+char* extract_custom_delimiter(const char* numbers) {
     const char* delimiter_start = numbers + 2;
     const char* delimiter_end = strchr(delimiter_start, '\n');
     if (delimiter_end) {
@@ -70,7 +70,7 @@ char* default_delimiter() {
 
 char* get_delimiter(const char* numbers) {
     if (numbers[0] == '/' && numbers[1] == '/') {
-        char* delimiter = extract_delimiter(numbers);
+        char* delimiter = extract_custom_delimiter(numbers);
         if (delimiter) {
             return delimiter;
         }
@@ -78,8 +78,12 @@ char* get_delimiter(const char* numbers) {
     return default_delimiter();
 }
 
-char* extract_numbers_part(const char* numbers) {
-    return (numbers[0] == '/' && numbers[1] == '/') ? strchr(numbers, '\n') + 1 : (char*)numbers;
+const char* extract_numbers_part(const char* numbers) {
+    if (numbers[0] == '/' && numbers[1] == '/') {
+        const char* num_start = strchr(numbers, '\n');
+        return (num_start) ? num_start + 1 : numbers;
+    }
+    return numbers;
 }
 
 int sum_tokens(const char* numbers, const char* delimiter) {
