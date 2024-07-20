@@ -81,8 +81,12 @@ char* default_delimiter() {
     return strdup(",\n");
 }
 
+int is_custom_delimiter(const char* numbers) {
+    return numbers[0] == '/' && numbers[1] == '/';
+}
+
 char* get_delimiter(const char* numbers) {
-    if (numbers[0] == '/' && numbers[1] == '/') {
+    if (is_custom_delimiter(numbers)) {
         char* delimiter = extract_custom_delimiter(numbers);
         if (delimiter) {
             return delimiter;
@@ -92,7 +96,7 @@ char* get_delimiter(const char* numbers) {
 }
 
 const char* extract_numbers_part(const char* numbers) {
-    if (numbers[0] == '/' && numbers[1] == '/') {
+    if (is_custom_delimiter(numbers)) {
         const char* num_start = strchr(numbers, '\n');
         return (num_start) ? num_start + 1 : numbers;
     }
