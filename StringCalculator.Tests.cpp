@@ -61,3 +61,43 @@ TEST(StringCalculatorAddTests, ExpectSumWithLongCustomDelimiter) {
     int result = add(input);
     ASSERT_EQ(result, expectedresult);
 }
+
+TEST(StringCalculatorAddTests, ExpectZeroWithEmptyCustomDelimiter) {
+    int expectedresult = 0;
+    const char* input = "//\n";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
+}
+
+TEST(StringCalculatorAddTests, ExpectSumWithNumber1000Included) {
+    int expectedresult = 1002;
+    const char* input = "2,1000";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
+}
+
+TEST(StringCalculatorAddTests, ExpectSumWithMultipleCustomDelimiters) {
+    int expectedresult = 6;
+    const char* input = "//[*][%]\n1*2%3";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
+}
+
+TEST(StringCalculatorAddTests, ThrowExceptionForNegativeNumbersWithCustomDelimiter) {
+    const char* input = "//;\n1;-2;3";
+    EXPECT_THROW({
+        try {
+            add(input);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ("negatives not allowed: -2", e.what());
+            throw;
+        }
+    }, std::runtime_error);
+}
+
+TEST(StringCalculatorAddTests, ExpectZeroWhenNoNumbersAfterCustomDelimiter) {
+    int expectedresult = 0;
+    const char* input = "//;\n";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
+}
